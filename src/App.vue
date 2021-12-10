@@ -38,11 +38,11 @@
                 <div class="search-icon icon center-x center-y"></div>
               </div>
             </div>
-            <div class="inline-block button rounded center-y" @click="showFilters()">
+            <!-- <div class="inline-block button rounded center-y" @click="showFilters()">
               <div class="center-area">
                 <div class="filter-icon icon center-x center-y"></div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -69,15 +69,15 @@
         <div class="select-list">
           <div
             class="select-item center-area"
-            v-for="industrie in industries"
-            :key="industrie.id"
-            @click="industrieSelected(industrie.id)"
+            v-for="company in companies"
+            :key="company.id"
+            @click="industrieSelected(company.id)"
           >
             <div
               class="industrie-icon icon center-y rounded primary-bg"
-              v-bind:style="{'background-image': 'url(' + industrie.icon + ')'}"
+              v-bind:style="{'background-image': 'url(' + company.icon + ')'}"
             ></div>
-            <div class="select-item-label center-y">{{ industrie.name }}</div>
+            <div class="select-item-label center-y">{{ company.name }}</div>
             <div class="center-y icon forward-icon"></div>
           </div>
         </div>
@@ -110,15 +110,15 @@
           </div>
           <div
             class="select-item center-area"
-            v-for="point in results"
-            :key="point"
-            @click="pointSelected(point.id)"
+            v-for="company in results"
+            :key="company"
+            @click="companySelected(company.id)"
           >
             <div
               class="center-y icon rounded placeholder"
-              v-bind:style="{'background-image': 'url(' + point.logo + ')'}"
+              v-bind:style="{'background-image': 'url(' + company.logo + ')'}"
             ></div>
-            <div class="select-item-label center-y">{{ point.name }}</div>
+            <div class="select-item-label center-y">{{ company.name }}</div>
             <div class="center-y icon forward-icon"></div>
           </div>
         </div>
@@ -227,7 +227,7 @@ Vue.use(VueI18n);
 import * as L from "leaflet";
 import "leaflet.markercluster";
 
-import { getPoints } from "./api/fetcher";
+import { getCompanies } from "./api/fetcher";
 
 export default {
   name: "webcomp-creative-industries",
@@ -336,7 +336,7 @@ export default {
 
       activities: [],
       industries: [],
-      points: []
+      companies: []
     };
   },
   props: {
@@ -381,7 +381,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/00.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -393,7 +393,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/01.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -405,7 +405,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/02.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -417,7 +417,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/03.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -429,7 +429,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/04.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -441,7 +441,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/05.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -453,7 +453,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/06.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -465,7 +465,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/07.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -477,7 +477,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/08.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -489,7 +489,7 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/09.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       },
       {
@@ -501,13 +501,13 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/11.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // point of the icon which will correspond to marker's location
+          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
         })
       }
     ];
   },
   async mounted() {
-    this.points = await getPoints(this.locale, "/");
+    this.companies = await getCompanies(this.locale, "/");
 
     this.initMap();
     this.initMarkers();
@@ -537,16 +537,16 @@ export default {
     },
     searching() {
       var b = this.searchValue.toLowerCase();
-      this.results = this.points.filter(function(point) {
-        var a = point.name.toLowerCase();
+      this.results = this.companies.filter(function(company) {
+        var a = company.name.toLowerCase();
         return a.includes(b);
       });
 
-      this.points.forEach(point => {
-        if (this.results.includes(point)) {
-          point.active = true;
+      this.companies.forEach(company => {
+        if (this.results.includes(company)) {
+          company.active = true;
         } else {
-          point.active = false;
+          company.active = false;
         }
       });
 
@@ -639,14 +639,14 @@ export default {
       this.renderFilters();
     },
 
-    pointSelected(id) {
+    companySelected(id) {
       this.searchIsActive = false;
 
-      const point = this.points.find(point => point.id === id);
-      this.activateSinglebox("selection", point.name);
-      this.selection = point;
+      const company = this.companies.find(company => company.id === id);
+      this.activateSinglebox("selection", company.name);
+      this.selection = company;
 
-      this.map.flyTo(point.coords, 16);
+      this.map.flyTo(company.coords, 16);
     },
 
     sectorSelected(sectorId) {
@@ -654,30 +654,38 @@ export default {
 
       this.filters.sectors = [sectorId];
       this.renderFilters();
-      this.results = this.points.filter(function(i) {
+      this.results = this.companies.filter(function(i) {
         return i.active === true;
       });
     },
 
-    industrieSelected(industrieId) {
-      const industrie = this.industries.find(
-        industrie => industrie.id === industrieId
-      );
+    industrieSelected(id) {
+      // const industrie = this.industries.find(
+      //   industrie => industrie.id === industrieId
+      // );
 
-      this.activateSinglebox("sectors", industrie.name);
-      this.industries.forEach(i => {
-        if (i.id !== industrieId) {
-          i.active = false;
-        } else {
-          i.active = true;
-        }
-        this.industrieChanged(i.id, i.active);
-      });
+      // this.activateSinglebox("sectors", industrie.name);
+      // this.industries.forEach(i => {
+      //   if (i.id !== industrieId) {
+      //     i.active = false;
+      //   } else {
+      //     i.active = true;
+      //   }
+      //   this.industrieChanged(i.id, i.active);
+      // });
 
-      this.filters.industries = [industrieId];
-      this.filters.sectors = industrie.sectors;
+      // this.filters.industries = [industrieId];
+      // this.filters.sectors = industrie.sectors;
 
-      this.searching();
+      // this.searching();
+
+      this.searchIsActive = false;
+
+      const company = this.companies.find(company => company.id === id);
+      this.activateSinglebox("selection", company.name);
+      this.selection = company;
+
+      this.map.flyTo(company.coords, 16);
     },
 
     industrieChanged(industrieId, active) {
@@ -705,8 +713,8 @@ export default {
         });
       }
 
-      this.points.forEach(point => {
-        point.active = true;
+      this.companies.forEach(company => {
+        company.active = true;
       });
 
       this.searching();
@@ -720,8 +728,8 @@ export default {
     },
 
     activateAllPoints() {
-      this.points.forEach(point => {
-        point.active = true;
+      this.companies.forEach(company => {
+        company.active = true;
       });
     },
 
@@ -729,9 +737,9 @@ export default {
       var newMarkers = new L.MarkerClusterGroup();
       // var newMarkers = new L.LayerGroup();
 
-      this.points.forEach(point => {
-        if (point.active) {
-          point.leafletObject.addTo(newMarkers);
+      this.companies.forEach(company => {
+        if (company.active) {
+          company.leafletObject.addTo(newMarkers);
         }
       });
 
@@ -741,15 +749,15 @@ export default {
     },
 
     renderFilters() {
-      this.points.forEach(point => {
-        var a = this.filters.industries.includes(point.industrie);
-        var b = this.filters.sectors.includes(point.sector);
-        var c = this.filters.activities.includes(point.activity);
+      this.companies.forEach(company => {
+        var a = this.filters.industries.includes(company.industrie);
+        var b = this.filters.sectors.includes(company.sector);
+        var c = this.filters.activities.includes(company.activity);
 
         if (!(a && b && c)) {
-          point.active = false;
+          company.active = false;
           this.results = this.results.filter(function(i) {
-            return i !== point;
+            return i !== company;
           });
         }
       });
@@ -768,20 +776,20 @@ export default {
       });
 
       this.filters.sectors = [];
-      this.points.forEach(point => {
+      this.companies.forEach(company => {
         const industrie = this.industries.find(
-          industrie => industrie.id === point.industrie
+          industrie => industrie.id === company.industrie
         );
 
-        if (!industrie.sectors.includes(point.sector)) {
-          industrie.sectors.push(point.sector);
+        if (!industrie.sectors.includes(company.sector)) {
+          industrie.sectors.push(company.sector);
         }
 
-        if (!this.filters.sectors.includes(point.sector)) {
-          this.filters.sectors.push(point.sector);
+        if (!this.filters.sectors.includes(company.sector)) {
+          this.filters.sectors.push(company.sector);
         }
 
-        point.active = true;
+        company.active = true;
       });
 
       this.filters.activities = [];
@@ -800,19 +808,19 @@ export default {
       this.markers = new L.MarkerClusterGroup();
       // this.markers = new L.layerGroup();
 
-      this.points.forEach(point => {
+      this.companies.forEach(company => {
         const industrie = this.industries.find(
-          industrie => industrie.id === point.industrie
+          industrie => industrie.id === company.industrie
         );
 
-        point.leafletObject = L.marker(point.coords, {
+        company.leafletObject = L.marker(company.coords, {
           icon: industrie.marker,
-          title: point.name
+          title: company.name
         });
-        point.leafletObject.on("click", () => {
-          this.pointSelected(point.id);
+        company.leafletObject.on("click", () => {
+          this.companySelected(company.id);
         });
-        point.leafletObject.addTo(this.markers);
+        company.leafletObject.addTo(this.markers);
       });
 
       this.markers.addTo(this.map);
