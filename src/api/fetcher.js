@@ -1,13 +1,13 @@
 import config from "./config";
 import axios from "axios";
 
-export function getPoints(language, path, parameters) {
+export function getCompanies(language, path, parameters) {
   return axios.get(config.API_BASE_URL + path, {
     parameters: parameters
   })
     .then(function (response) {
       console.log("data fetched")
-      return generatePoints(response.data, language);
+      return generateCompanies(response.data, language);
     })
     .catch(function (error) {
       console.log(error);
@@ -15,36 +15,36 @@ export function getPoints(language, path, parameters) {
     });
 }
 
-function generatePoints(res, language) {
-  var points = [];
+function generateCompanies(res, language) {
+  var companies = [];
 
   res.data.forEach((el, i) => {
     if (el.smetadata.online == true) {
-      var point = parsePointData(i, el);
+      var company = parseCompanyData(i, el);
 
       switch (language) {
         case "en":
-          point.sector = point.sectorEn;
-          point.description = point.descriptionEn;
+          company.sector = company.sectorEn;
+          company.description = company.descriptionEn;
           break;
         case "de":
-          point.sector = point.sectorDe;
-          point.description = point.descriptionDe;
+          company.sector = company.sectorDe;
+          company.description = company.descriptionDe;
           break;
         case "it":
-          point.sector = point.sectorIt;
-          point.description = point.descriptionIt;
+          company.sector = company.sectorIt;
+          company.description = company.descriptionIt;
           break;
       }
 
-      points.push(point);
+      companies.push(company);
     }
   });
 
-  return points;
+  return companies;
 }
 
-function parsePointData(index, element) {
+function parseCompanyData(index, element) {
   var meta = element.smetadata
 
   var industryId
