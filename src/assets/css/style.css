@@ -34,7 +34,7 @@ body {
 }
 
 .logo {
-  background-image: url("../icons/idm.png");
+  /* background-image: url("../icons/idm.png"); */
   background-repeat: no-repeat;
 }
 
@@ -51,8 +51,8 @@ body {
   position: absolute;
   top: 0;
   z-index: 20;
-  width: 400px;
-  height: 65%;
+  width: 40%;
+  height: 80%;
   background: white;
   overflow: hidden;
 }
@@ -65,7 +65,7 @@ body {
 
 .navbar .title {
   text-transform: capitalize;
-  max-width: 175px;
+  max-width: 80%;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -453,4 +453,32 @@ a.icon {
 
 .pin-icon {
   background-image: url("../icons/pin.png");
+}
+
+.company-logo {
+  
+}
+
+.figure1 {
+  background-size: contain;
+  width: 400px;
+  float:left;
+  background-repeat: no-repeat;
+}
+
+.figure2 {
+  background-size: contain;
+  width: 100px;
+  background-repeat: no-repeat;
+}
+
+.selection-title {
+  font-weight: 900;
+  font-size: 36px;
+}
+
+.selection-subtitle {
+  margin-top: 20px;
+  font-weight: 900;
+  font-size: 20px;
 }

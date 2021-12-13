@@ -19,26 +19,26 @@ function generateCompanies(res, language) {
   var companies = [];
 
   res.data.forEach((el, i) => {
-    if (el.smetadata.online == true) {
-      var company = parseCompanyData(i, el);
+    // if (el.smetadata.online == true) {
+    var company = parseCompanyData(i, el);
 
-      switch (language) {
-        case "en":
-          company.sector = company.sectorEn;
-          company.description = company.descriptionEn;
-          break;
-        case "de":
-          company.sector = company.sectorDe;
-          company.description = company.descriptionDe;
-          break;
-        case "it":
-          company.sector = company.sectorIt;
-          company.description = company.descriptionIt;
-          break;
-      }
-
-      companies.push(company);
+    switch (language) {
+      case "en":
+        company.sector = company.sectorEn;
+        company.description = company.descriptionEn;
+        break;
+      case "de":
+        company.sector = company.sectorDe;
+        company.description = company.descriptionDe;
+        break;
+      case "it":
+        company.sector = company.sectorIt;
+        company.description = company.descriptionIt;
+        break;
     }
+
+    companies.push(company);
+    // }
   });
 
   return companies;
@@ -47,71 +47,15 @@ function generateCompanies(res, language) {
 function parseCompanyData(index, element) {
   var meta = element.smetadata
 
-  var industryId
-  var activityTypeId
+  let imageLogoLink = config.IMAGES_S3_BUCKET_URL;
+  let imageFigure1Link = config.IMAGES_S3_BUCKET_URL;
+  let imageFigure2Link = config.IMAGES_S3_BUCKET_URL;
 
-  switch (meta.industry.trim().toLowerCase()) {
-    case "architecture":
-      industryId = 0;
-      break;
-    case "software & games":
-      industryId = 1;
-      break;
-    case "design":
-      industryId = 2;
-      break;
-    case "publishing & press":
-      industryId = 3;
-      break;
-    case "visual arts":
-      industryId = 4;
-      break;
-    case "film & video":
-      industryId = 5;
-      break;
-    case "radio & tv":
-      industryId = 6;
-      break;
-    case "music":
-      industryId = 7;
-      break;
-    case "performing arts":
-      industryId = 8;
-      break;
-    case "handicraft":
-      industryId = 9;
-      break;
-    case "advertising":
-      industryId = 10;
-      break;
-    default:
-      industryId = 10;
-      console.log("ERROR IN INDUSTRY NAME:" + meta.industry);
-  }
 
-  switch (meta.legal_form.trim().toLowerCase()) {
-    case "freelance":
-      activityTypeId = 0;
-      break;
-    case "company":
-      activityTypeId = 1;
-      break;
-    case "association":
-      activityTypeId = 2;
-      break;
-    case "entity":
-      activityTypeId = 3;
-      break;
-  }
 
-  var fb, ig, linkedin;
+  var linkedin;
   var website, websiteURL;
-  if (meta.fb) {
-    fb = parseURL(meta.fb);
-  }
-  if (meta.ig) {
-    ig = parseURL(meta.ig);
-  }
+
   if (meta.linkedin) {
     linkedin = parseURL(meta.linkedin);
   }
@@ -121,21 +65,47 @@ function parseCompanyData(index, element) {
     websiteURL = url[1];
   }
 
+  // hack to change images suffix to .png
+  imageLogoLink += meta.image_logo.substring(0, meta.image_logo.length - 4) + ".png";
+  imageFigure1Link += meta.image_figure_1.substring(0, meta.image_figure_1.length - 4) + ".png";
+  imageFigure2Link += meta.image_figure_2.substring(0, meta.image_figure_2.length - 4) + ".png";
+
+
+  console.log(meta.products__services.en);
+
   return {
-    id: index,
-    name: meta.name,
-    industrie: industryId,
-    sectorEn: meta.sector.en,
-    sectorDe: meta.sector.de,
-    sectorIt: meta.sector.it,
-    activity: activityTypeId,
+    id: meta.organization__short_name.de,
+    name: meta.organization__short_name.de,
+    industrie: "",
+    sectorEn: "",
+    sectorDe: "",
+    sectorIt: "",
+    activity: "",
     coords: [element.scoordinate.y, element.scoordinate.x],
-    logo: meta.logo,
-    descriptionEn: meta.description.en,
-    descriptionDe: meta.description.de,
-    descriptionIt: meta.description.it,
-    facebook: fb,
-    instagram: ig,
+    logo: imageLogoLink,
+    figure1: imageFigure1Link,
+    figure2: imageFigure2Link,
+    figure1DescriptionEn: meta.figure1_description ? meta.figure1_description.en : "",
+    figure1DescriptionDe: meta.figure1_description ? meta.figure1_description.de : "",
+    figure1DescriptionIt: meta.figure1_description ? meta.figure1_description.it : "",
+    figure2DescriptionEn: meta.figure2_description ? meta.figure2_description.en : "",
+    figure2DescriptionDe: meta.figure2_description ? meta.figure2_description.de : "",
+    figure2DescriptionIt: meta.figure2_description ? meta.figure2_description.it : "",
+    descriptionEn: meta.organization_description.en,
+    descriptionDe: meta.organization_description.de,
+    descriptionIt: meta.organization_description.it,
+    productServicesEn: meta.products__services.en,
+    productServicesDe: meta.products__services.de,
+    productServicesIt: meta.products__services.it,
+    industrialSector: meta.industrial_sector,
+    contactPerson: {
+      name: meta.contact_person,
+      roleEn: meta.contact_person_role ? meta.contact_person_role.en : "",
+      roleDe: meta.contact_person_role ? meta.contact_person_role.de : "",
+      roleIt: meta.contact_person_role ? meta.contact_person_role.it : "",
+      email: meta.email_contact_person
+    },
+    certifications: meta.certifications,
     linkedin: linkedin,
     website: website,
     websiteURL: websiteURL,
@@ -151,6 +121,6 @@ function parseURL(url) {
   if (!protocolRegex.test(url)) {
     return [url, "//" + url];
   } else {
-    return [url.replace(protocolRegex, ""), url]; 
+    return [url.replace(protocolRegex, ""), url];
   }
 }

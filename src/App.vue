@@ -1,37 +1,55 @@
 <template>
-  <div id="app" ref="app" class="container" :style="{ width: width, height: height}" v-bind:class="appWidth" v-on:resize="setResponsive()">
+  <div
+    id="app"
+    ref="app"
+    class="container"
+    :style="{ width: width, height: height }"
+    v-bind:class="appWidth"
+    v-on:resize="setResponsive()"
+  >
     <div id="map" ref="map" class="map"></div>
-    <div class="center-button inline-block button white-bg rounded" @click="centerMap()">
+    <div
+      class="center-button inline-block button white-bg rounded"
+      @click="centerMap()"
+    >
       <div class="center-area">
         <div class="center-icon icon center-x center-y"></div>
       </div>
     </div>
     <div class="logo bottom-left"></div>
-    <div id="omnibox" class="margined shadowed rounded" v-bind:class="{expanded: menuActive}">
-      <div class="navbar" v-bind:class="{ active: !filterIsActive}">
+    <div
+      id="omnibox"
+      class="margined shadowed rounded"
+      v-bind:class="{ expanded: menuActive }"
+    >
+      <div class="navbar" v-bind:class="{ active: !filterIsActive }">
         <div class="row">
           <div
             class="title-header center-area fill"
-            v-bind:class="{active: currentSinglebox !== 'industries' || search}"
+            v-bind:class="{
+              active: currentSinglebox !== 'industries' || search,
+            }"
           >
             <div
               class="nav-back inline-block center-y icon back-icon clickable"
               @click="stepBack()"
             ></div>
-            <div class="title inline-block center-y title">{{ currentSingleboxTitle }}</div>
+            <div class="title inline-block center-y title">
+              {{ currentSingleboxTitle }}
+            </div>
           </div>
           <div class="center-area">
             <input
               ref="search-bar"
               class="search-bar inline-block center-y rounded"
-              v-bind:class="{active: searchIsActive}"
+              v-bind:class="{ active: searchIsActive }"
               type="text"
               :placeholder="$t('search-placeholder')"
               v-model="searchValue"
             />
             <div
               class="search-button inline-block button rounded center-y"
-              v-bind:class="{active: searchIsActive}"
+              v-bind:class="{ active: searchIsActive }"
               @click="toggleSearchbar()"
             >
               <div class="center-area">
@@ -46,13 +64,16 @@
           </div>
         </div>
       </div>
-      <div class="nav-filters navbar" v-bind:class="{active: filterIsActive}">
+      <div class="nav-filters navbar" v-bind:class="{ active: filterIsActive }">
         <div class="row">
           <div class="center-area fill">
-            <div class="inline-block center-y title">{{ $t('filter') }}</div>
+            <div class="inline-block center-y title">{{ $t("filter") }}</div>
           </div>
           <div class="center-area">
-            <div class="inline-block button primary-bg rounded center-y" @click="showFilters()">
+            <div
+              class="inline-block button primary-bg rounded center-y"
+              @click="showFilters()"
+            >
               <div class="center-area">
                 <div class="confirm-icon icon center-x center-y"></div>
               </div>
@@ -64,7 +85,10 @@
       <div
         id="industries"
         class="singlebox"
-        v-bind:class="{active: currentSinglebox === 'industries', shift: lastBoxes.includes('industries')}"
+        v-bind:class="{
+          active: currentSinglebox === 'industries',
+          shift: lastBoxes.includes('industries'),
+        }"
       >
         <div class="select-list">
           <div
@@ -74,8 +98,8 @@
             @click="industrieSelected(company.id)"
           >
             <div
-              class="industrie-icon icon center-y rounded primary-bg"
-              v-bind:style="{'background-image': 'url(' + company.icon + ')'}"
+              class="company-logo icon center-y"
+              v-bind:style="{ 'background-image': 'url(' + company.logo + ')' }"
             ></div>
             <div class="select-item-label center-y">{{ company.name }}</div>
             <div class="center-y icon forward-icon"></div>
@@ -85,7 +109,10 @@
       <div
         id="sectors"
         class="singlebox"
-        v-bind:class="{active: currentSinglebox === 'sectors', shift: lastBoxes.includes('sectors')}"
+        v-bind:class="{
+          active: currentSinglebox === 'sectors',
+          shift: lastBoxes.includes('sectors'),
+        }"
       >
         <div class="select-list">
           <div
@@ -102,11 +129,14 @@
       <div
         id="results"
         class="singlebox"
-        v-bind:class="{active: currentSinglebox === 'results', shift: lastBoxes.includes('results')}"
+        v-bind:class="{
+          active: currentSinglebox === 'results',
+          shift: lastBoxes.includes('results'),
+        }"
       >
         <div class="select-list">
           <div class="select-item center-area" v-if="results.length === 0">
-            <div class="select-item-label center-y">{{ $t('no-result') }}</div>
+            <div class="select-item-label center-y">{{ $t("no-result") }}</div>
           </div>
           <div
             class="select-item center-area"
@@ -116,7 +146,7 @@
           >
             <div
               class="center-y icon rounded placeholder"
-              v-bind:style="{'background-image': 'url(' + company.logo + ')'}"
+              v-bind:style="{ 'background-image': 'url(' + company.logo + ')' }"
             ></div>
             <div class="select-item-label center-y">{{ company.name }}</div>
             <div class="center-y icon forward-icon"></div>
@@ -126,32 +156,48 @@
       <div
         id="selection"
         class="singlebox"
-        v-bind:class="{active: currentSinglebox === 'selection'}"
+        v-bind:class="{ active: currentSinglebox === 'selection' }"
       >
         <div class="row">
           <div class="links">
             <div class="social">
-              <!-- <div class="center-y icon rounded instagram"></div> -->
-              <a class="icon" v-if="selection.instragram" :href="'//' + selection.instagram" target="_blank">
-                <div class="icon rounded instagram-icon"></div>
-              </a>
-              <a class="icon" v-if="selection.facebook" :href="'//' + selection.facebook" target="_blank">
-                <div class="icon rounded facebook-icon"></div>
-              </a>
-              <a class="icon" v-if="selection.linkedin" :href="'//' + selection.linkedin" target="_blank">
+              <a
+                class="icon"
+                v-if="selection.linkedin"
+                :href="'//' + selection.linkedin"
+                target="_blank"
+              >
                 <div class="icon rounded linkedin-icon"></div>
               </a>
             </div>
             <div class="website">
-              <a :href="selection.websiteURL" target="_blank">{{ selection.website }}</a>
+              <a :href="selection.websiteURL" target="_blank">{{
+                selection.website
+              }}</a>
             </div>
           </div>
           <div
-            class="logo rounded placeholder"
-            v-bind:style="{'background-image': 'url(' + selection.logo + ')'}"
+            class="figure1"
+            v-bind:style="{
+              'background-image': 'url(' + selection.figure1 + ')',
+            }"
+          ></div>
+          <div
+            class="figure2"
+            v-bind:style="{
+              'background-image': 'url(' + selection.figure2 + ')',
+            }"
+          ></div>
+          <div
+            class="logo"
+            v-bind:style="{ 'background-image': 'url(' + selection.logo + ')' }"
           ></div>
         </div>
+        <div class="selection-title">{{ selection.name }}</div>
+        <div class="selection-subtitle">UNTERNEHMEN</div>
         <div class="description">{{ selection.description }}</div>
+         <div class="selection-subtitle">PRODUKTE UND DIENSTL</div>
+        <div class="description">{{ selection.productServicesEn }}</div>
         <div v-if="selection.address" class="contact center-area">
           <div class="center-y button rounded primary-bg">
             <div class="center-area">
@@ -168,21 +214,37 @@
           </div>
           <div class="phone-number center-y">{{ selection.phone }}</div>
         </div>
-        <div v-if="selection.mail" class="contact center-area" style="padding-bottom: 25px;">
+        <div
+          v-if="selection.mail"
+          class="contact center-area"
+          style="padding-bottom: 25px"
+        >
           <div class="center-y button rounded primary-bg">
             <div class="center-area">
               <div class="mail-icon icon center-x center-y"></div>
             </div>
           </div>
           <div class="mail center-y">
-            <a :href="'mailto:' + selection.mail" style="color: black; text-decoration: none;">{{ selection.mail }}</a>
+            <a
+              :href="'mailto:' + selection.mail"
+              style="color: black; text-decoration: none"
+              >{{ selection.mail }}</a
+            >
           </div>
         </div>
       </div>
-      <div id="filters" class="singlebox" v-bind:class="{active: filterIsActive}">
+      <div
+        id="filters"
+        class="singlebox"
+        v-bind:class="{ active: filterIsActive }"
+      >
         <div class="filter-class">
-          <div class="title">{{ $t('type') }}:</div>
-          <div class="form-check" v-for="activity in activities" :key="activity.id">
+          <div class="title">{{ $t("type") }}:</div>
+          <div
+            class="form-check"
+            v-for="activity in activities"
+            :key="activity.id"
+          >
             <label class="form-check-label">
               <input
                 class="form-check-input"
@@ -197,8 +259,12 @@
         </div>
 
         <div class="filter-class" v-if="search">
-          <div class="title">{{ $t('industry')}}:</div>
-          <div class="form-check" v-for="industrie in industries" :key="industrie.id">
+          <div class="title">{{ $t("industry") }}:</div>
+          <div
+            class="form-check"
+            v-for="industrie in industries"
+            :key="industrie.id"
+          >
             <label class="form-check-label">
               <input
                 class="form-check-input"
@@ -255,7 +321,7 @@ export default {
         freelancer: "Freelancer",
         company: "Company",
         association: "Association",
-        entity: "Public entity"
+        entity: "Public entity",
       },
       de: {
         industry: "Industrie",
@@ -278,7 +344,7 @@ export default {
         freelancer: "Freelancer",
         company: "Firma",
         association: "Verband",
-        entity: "Öffentliche Einrichtung"
+        entity: "Öffentliche Einrichtung",
       },
       it: {
         industry: "Industria",
@@ -301,9 +367,9 @@ export default {
         freelancer: "Freelancer",
         company: "Azienda",
         association: "Associazione",
-        entity: "Ente pubblico"
-      }
-    }
+        entity: "Ente pubblico",
+      },
+    },
   }),
   data() {
     return {
@@ -320,7 +386,7 @@ export default {
       filters: {
         industries: [],
         sectors: [],
-        activities: []
+        activities: [],
       },
       results: [],
       selection: "",
@@ -336,14 +402,13 @@ export default {
 
       activities: [],
       industries: [],
-      companies: []
+      companies: [],
     };
   },
   props: {
     locale: { type: String, default: () => "en" },
-    width: { type: String, default: () => "100%"},
-    height: { type: String, default: () => "100%"}
-
+    width: { type: String, default: () => "100%" },
+    height: { type: String, default: () => "100%" },
   },
   beforeMount() {
     this.$i18n.locale = this.locale;
@@ -353,23 +418,23 @@ export default {
       {
         id: 0,
         name: this.$t("freelancer"),
-        active: false
+        active: false,
       },
       {
         id: 1,
         name: this.$t("company"),
-        active: false
+        active: false,
       },
       {
         id: 2,
         name: this.$t("association"),
-        active: false
+        active: false,
       },
       {
         id: 3,
         name: this.$t("entity"),
-        active: false
-      }
+        active: false,
+      },
     ];
     this.industries = [
       {
@@ -381,8 +446,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/00.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 1,
@@ -393,8 +458,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/01.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 2,
@@ -405,8 +470,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/02.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 3,
@@ -417,8 +482,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/03.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 4,
@@ -429,8 +494,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/04.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 5,
@@ -441,8 +506,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/05.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 6,
@@ -453,8 +518,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/06.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 7,
@@ -465,8 +530,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/07.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 8,
@@ -477,8 +542,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/08.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 9,
@@ -489,8 +554,8 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/09.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
       },
       {
         id: 10,
@@ -501,9 +566,9 @@ export default {
         marker: L.icon({
           iconUrl: require("@/assets/markers/11.png"),
           iconSize: [18.5, 30], // size of the icon
-          iconAnchor: [24, 32] // company of the icon which will correspond to marker's location
-        })
-      }
+          iconAnchor: [24, 32], // company of the icon which will correspond to marker's location
+        }),
+      },
     ];
   },
   async mounted() {
@@ -515,7 +580,7 @@ export default {
     this.renderFilters();
     this.setResponsive();
     var self = this;
-    window.addEventListener("resize", function() {
+    window.addEventListener("resize", function () {
       self.setResponsive();
     });
   },
@@ -537,12 +602,12 @@ export default {
     },
     searching() {
       var b = this.searchValue.toLowerCase();
-      this.results = this.companies.filter(function(company) {
+      this.results = this.companies.filter(function (company) {
         var a = company.name.toLowerCase();
         return a.includes(b);
       });
 
-      this.companies.forEach(company => {
+      this.companies.forEach((company) => {
         if (this.results.includes(company)) {
           company.active = true;
         } else {
@@ -587,7 +652,8 @@ export default {
     },
 
     centerMap() {
-      this.map.flyTo(this.center, this.zoom);
+      // this.map.flyTo(this.center, this.zoom);
+      this.myMapFlyTo(this.center, this.zoom);
     },
 
     backToStart() {
@@ -612,17 +678,17 @@ export default {
       switch (this.currentSinglebox) {
         case "sectors":
           this.filters.industries = [];
-          this.industries.forEach(industrie => {
+          this.industries.forEach((industrie) => {
             this.filters.industries.push(industrie.id);
           });
         /* falls through */
         case "results":
           this.filters.sectors = [];
-          this.filters.industries.forEach(industrieId => {
+          this.filters.industries.forEach((industrieId) => {
             var industrie = this.industries.find(
-              industrie => industrie.id === industrieId
+              (industrie) => industrie.id === industrieId
             );
-            industrie.sectors.forEach(sector => {
+            industrie.sectors.forEach((sector) => {
               this.filters.sectors.push(sector);
             });
           });
@@ -642,11 +708,12 @@ export default {
     companySelected(id) {
       this.searchIsActive = false;
 
-      const company = this.companies.find(company => company.id === id);
-      this.activateSinglebox("selection", company.name);
+      const company = this.companies.find((company) => company.id === id);
+      this.activateSinglebox("selection");
       this.selection = company;
 
-      this.map.flyTo(company.coords, 16);
+      // this.map.flyTo(company.coords, 16);
+      this.myMapFlyTo(company.coords, 16);
     },
 
     sectorSelected(sectorId) {
@@ -654,7 +721,7 @@ export default {
 
       this.filters.sectors = [sectorId];
       this.renderFilters();
-      this.results = this.companies.filter(function(i) {
+      this.results = this.companies.filter(function (i) {
         return i.active === true;
       });
     },
@@ -681,11 +748,12 @@ export default {
 
       this.searchIsActive = false;
 
-      const company = this.companies.find(company => company.id === id);
-      this.activateSinglebox("selection", company.name);
+      const company = this.companies.find((company) => company.id === id);
+      this.activateSinglebox("selection");
       this.selection = company;
 
-      this.map.flyTo(company.coords, 16);
+      // this.map.flyTo(company.coords, 16);
+      this.myMapFlyTo(company.coords, 16);
     },
 
     industrieChanged(industrieId, active) {
@@ -694,7 +762,7 @@ export default {
           this.filters.industries.push(industrieId);
         }
       } else {
-        this.filters.industries = this.filters.industries.filter(function(i) {
+        this.filters.industries = this.filters.industries.filter(function (i) {
           return i !== industrieId;
         });
       }
@@ -708,27 +776,27 @@ export default {
           this.filters.activities.push(activityId);
         }
       } else {
-        this.filters.activities = this.filters.activities.filter(function(i) {
+        this.filters.activities = this.filters.activities.filter(function (i) {
           return i !== activityId;
         });
       }
 
-      this.companies.forEach(company => {
+      this.companies.forEach((company) => {
         company.active = true;
       });
 
       this.searching();
     },
 
-    activateSinglebox(id, title) {
+    activateSinglebox(id) {
       this.lastBoxes.push(this.currentSinglebox);
       this.lastBoxesTitle.push(this.currentSingleboxTitle);
       this.currentSinglebox = id;
-      this.currentSingleboxTitle = title;
+      this.currentSingleboxTitle = "";
     },
 
     activateAllPoints() {
-      this.companies.forEach(company => {
+      this.companies.forEach((company) => {
         company.active = true;
       });
     },
@@ -737,7 +805,7 @@ export default {
       var newMarkers = new L.MarkerClusterGroup();
       // var newMarkers = new L.LayerGroup();
 
-      this.companies.forEach(company => {
+      this.companies.forEach((company) => {
         if (company.active) {
           company.leafletObject.addTo(newMarkers);
         }
@@ -749,14 +817,14 @@ export default {
     },
 
     renderFilters() {
-      this.companies.forEach(company => {
+      this.companies.forEach((company) => {
         var a = this.filters.industries.includes(company.industrie);
         var b = this.filters.sectors.includes(company.sector);
         var c = this.filters.activities.includes(company.activity);
 
         if (!(a && b && c)) {
           company.active = false;
-          this.results = this.results.filter(function(i) {
+          this.results = this.results.filter(function (i) {
             return i !== company;
           });
         }
@@ -767,7 +835,7 @@ export default {
 
     initFilters() {
       this.filters.industries = [];
-      this.industries.forEach(industrie => {
+      this.industries.forEach((industrie) => {
         industrie.active = true;
 
         if (!this.filters.industries.includes(industrie.id)) {
@@ -776,9 +844,9 @@ export default {
       });
 
       this.filters.sectors = [];
-      this.companies.forEach(company => {
+      this.companies.forEach((company) => {
         const industrie = this.industries.find(
-          industrie => industrie.id === company.industrie
+          (industrie) => industrie.id === company.industrie
         );
 
         if (!industrie.sectors.includes(company.sector)) {
@@ -793,7 +861,7 @@ export default {
       });
 
       this.filters.activities = [];
-      this.activities.forEach(activity => {
+      this.activities.forEach((activity) => {
         activity.active = true;
 
         if (!this.filters.activities.includes(activity.id)) {
@@ -808,14 +876,14 @@ export default {
       this.markers = new L.MarkerClusterGroup();
       // this.markers = new L.layerGroup();
 
-      this.companies.forEach(company => {
+      this.companies.forEach((company) => {
         const industrie = this.industries.find(
-          industrie => industrie.id === company.industrie
+          (industrie) => industrie.id === 0
         );
 
         company.leafletObject = L.marker(company.coords, {
           icon: industrie.marker,
-          title: company.name
+          title: company.name,
         });
         company.leafletObject.on("click", () => {
           this.companySelected(company.id);
@@ -837,7 +905,7 @@ export default {
         {
           maxZoom: 18,
           attribution:
-            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+            '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>',
         }
       );
 
@@ -847,16 +915,29 @@ export default {
         resizeEvent.initUIEvent("resize", true, false, window, 0);
         window.dispatchEvent(resizeEvent);
       }, 100);
-    }
+    },
+
+    // instead of centering the point, move it sightly to the right on desktop
+    myMapFlyTo(coordinates, zoom) {
+      console.log(coordinates);
+      if (!this.isMobile())
+        coordinates = [coordinates[0], coordinates[1] - 0.01];
+      console.log(coordinates);
+      this.map.flyTo(coordinates, zoom);
+    },
+
+    isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    },
   },
   watch: {
-    locale: function(val) {
+    locale: function (val) {
       this.$i18n.locale = val;
     },
-    searchValue: function() {
+    searchValue: function () {
       this.searching();
-    }
-  }
+    },
+  },
 };
 </script>
 
