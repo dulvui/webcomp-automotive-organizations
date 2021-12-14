@@ -52,7 +52,7 @@ body {
   top: 0;
   z-index: 20;
   width: 40%;
-  height: 80%;
+  height: 92%;
   background: white;
   overflow: hidden;
 }
@@ -201,8 +201,8 @@ body {
 }
 
 .select-item > .icon {
-  height: 50px;
-  width: 50px;
+  /* height: 50px; */
+  width: 100px;
   margin-right: 15px !important;
 }
 
@@ -277,8 +277,8 @@ body {
 .inline-block {
   display: inline-block;
 }
-+ − Leaflet|© OpenStreetMap,
-© CARTO Industrie a {
+
+a {
   color: black;
   text-decoration: none;
   border-bottom: 0.5px lightgray solid;
@@ -323,11 +323,12 @@ a.icon {
   opacity: 1;
 }
 
-.row {
+.header {
   height: 100px;
   display: flex;
   justify-content: space-between;
 }
+
 
 .links {
   display: flex;
@@ -346,6 +347,7 @@ a.icon {
 .logo {
   background-size: contain;
   width: 100px;
+  height: 50px;
 }
 
 .description {
@@ -455,20 +457,30 @@ a.icon {
   background-image: url("../icons/pin.png");
 }
 
-.company-logo {
-  
+
+.row {
+  height: 200px;
+  display: flex;
+  justify-content: space-between;
 }
+
+.col {
+  display: grid;
+}
+
 
 .figure1 {
   background-size: contain;
-  width: 400px;
-  float:left;
+  width: 300px;
+  height: 200px;
   background-repeat: no-repeat;
 }
 
 .figure2 {
+  align-self: flex-end;
   background-size: contain;
-  width: 100px;
+  width: 200px;
+  height: 100px;
   background-repeat: no-repeat;
 }
 
@@ -480,5 +492,28 @@ a.icon {
 .selection-subtitle {
   margin-top: 20px;
   font-weight: 900;
-  font-size: 20px;
+  font-size: 18px;
+}
+
+.figure-description {
+  font-size: 14px;
+}
+
+.figure2-description {
+  align-items: flex-end;
+  padding-left: 20px;
+}
+
+.footer-text {
+  font-size: 12px;
+  justify-content: flex-end;
+}
+
+.bold-text {
+  font-weight: 800;
+}
+
+.company-logo {
+  width: 200px;
+  height: 100px;
 }

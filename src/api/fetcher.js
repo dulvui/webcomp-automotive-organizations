@@ -19,33 +19,38 @@ function generateCompanies(res, language) {
   var companies = [];
 
   res.data.forEach((el, i) => {
-    // if (el.smetadata.online == true) {
     var company = parseCompanyData(i, el);
+
+    company.description = company.description[language];
+    company.productServices = company.productServices[language];
+    company.references = company.references[language];
+    company.address = company.address[language];
+
+    company.figure1.description = company.figure1.description[language];
+    company.figure2.description = company.figure2.description[language];
+
+    company.contactPerson.role = company.contactPerson.role[language];
 
     switch (language) {
       case "en":
         company.sector = company.sectorEn;
-        company.description = company.descriptionEn;
         break;
       case "de":
         company.sector = company.sectorDe;
-        company.description = company.descriptionDe;
         break;
       case "it":
         company.sector = company.sectorIt;
-        company.description = company.descriptionIt;
         break;
     }
 
     companies.push(company);
-    // }
   });
 
   return companies;
 }
 
 function parseCompanyData(index, element) {
-  var meta = element.smetadata
+  var meta = element.smetadata;
 
   let imageLogoLink = config.IMAGES_S3_BUCKET_URL;
   let imageFigure1Link = config.IMAGES_S3_BUCKET_URL;
@@ -71,11 +76,15 @@ function parseCompanyData(index, element) {
   imageFigure2Link += meta.image_figure_2.substring(0, meta.image_figure_2.length - 4) + ".png";
 
 
-  console.log(meta.products__services.en);
-
   return {
     id: meta.organization__short_name.de,
     name: meta.organization__short_name.de,
+    legalName: meta.organizationlegal_name,
+    address: {
+      de: meta.address.de,
+      it: meta.address.it,
+      en: meta.address.it,
+    },
     industrie: "",
     sectorEn: "",
     sectorDe: "",
@@ -83,34 +92,57 @@ function parseCompanyData(index, element) {
     activity: "",
     coords: [element.scoordinate.y, element.scoordinate.x],
     logo: imageLogoLink,
-    figure1: imageFigure1Link,
-    figure2: imageFigure2Link,
-    figure1DescriptionEn: meta.figure1_description ? meta.figure1_description.en : "",
-    figure1DescriptionDe: meta.figure1_description ? meta.figure1_description.de : "",
-    figure1DescriptionIt: meta.figure1_description ? meta.figure1_description.it : "",
-    figure2DescriptionEn: meta.figure2_description ? meta.figure2_description.en : "",
-    figure2DescriptionDe: meta.figure2_description ? meta.figure2_description.de : "",
-    figure2DescriptionIt: meta.figure2_description ? meta.figure2_description.it : "",
-    descriptionEn: meta.organization_description.en,
-    descriptionDe: meta.organization_description.de,
-    descriptionIt: meta.organization_description.it,
-    productServicesEn: meta.products__services.en,
-    productServicesDe: meta.products__services.de,
-    productServicesIt: meta.products__services.it,
+    figure1: {
+      link : imageFigure1Link,
+      description: {
+        en: meta.figure1_description ? meta.figure1_description.en : "",
+        de: meta.figure1_description ? meta.figure1_description.de : "",
+        it: meta.figure1_description ? meta.figure1_description.it : "",
+      },
+    },
+    figure2: {
+      link: imageFigure2Link,
+      description: {
+        en: meta.figure2_description ? meta.figure2_description.en : "",
+        de: meta.figure2_description ? meta.figure2_description.de : "",
+        it: meta.figure2_description ? meta.figure2_description.it : "",
+      },
+    },
+    description : {
+      en: meta.organization_description.en,
+      de: meta.organization_description.de,
+      it: meta.organization_description.it,
+    },
+    productServices : {
+      en: meta.products__services.en,
+      de: meta.products__services.de,
+      it: meta.products__services.it,
+    },
+    references : {
+      en: meta.references ? meta.references.en : "",
+      de: meta.references ? meta.references.de : "",
+      it: meta.references ? meta.references.it : "",
+    },
     industrialSector: meta.industrial_sector,
     contactPerson: {
       name: meta.contact_person,
-      roleEn: meta.contact_person_role ? meta.contact_person_role.en : "",
-      roleDe: meta.contact_person_role ? meta.contact_person_role.de : "",
-      roleIt: meta.contact_person_role ? meta.contact_person_role.it : "",
+      role : {
+        en: meta.contact_person_role ? meta.contact_person_role.en : "",
+        de: meta.contact_person_role ? meta.contact_person_role.de : "",
+        it: meta.contact_person_role ? meta.contact_person_role.it : "",
+      },
       email: meta.email_contact_person
     },
     certifications: meta.certifications,
     linkedin: linkedin,
     website: website,
     websiteURL: websiteURL,
-    phone: meta.phone_number,
+    phone: meta.phone,
     mail: meta.email,
+    turnover: meta.turnover_m,
+    exportQuote: meta.export_quote_,
+    rdQuote : meta.rd_quotefacts,
+    employees: meta.employees,
     active: true
   }
 }

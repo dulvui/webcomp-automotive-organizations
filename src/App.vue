@@ -23,7 +23,7 @@
       v-bind:class="{ expanded: menuActive }"
     >
       <div class="navbar" v-bind:class="{ active: !filterIsActive }">
-        <div class="row">
+        <div class="header">
           <div
             class="title-header center-area fill"
             v-bind:class="{
@@ -39,7 +39,8 @@
             </div>
           </div>
           <div class="center-area">
-            <input
+            <!-- <input
+              v-if="currentSinglebox != 'selection'"
               ref="search-bar"
               class="search-bar inline-block center-y rounded"
               v-bind:class="{ active: searchIsActive }"
@@ -55,7 +56,7 @@
               <div class="center-area">
                 <div class="search-icon icon center-x center-y"></div>
               </div>
-            </div>
+            </div> -->
             <!-- <div class="inline-block button rounded center-y" @click="showFilters()">
               <div class="center-area">
                 <div class="filter-icon icon center-x center-y"></div>
@@ -65,7 +66,7 @@
         </div>
       </div>
       <div class="nav-filters navbar" v-bind:class="{ active: filterIsActive }">
-        <div class="row">
+        <div class="header">
           <div class="center-area fill">
             <div class="inline-block center-y title">{{ $t("filter") }}</div>
           </div>
@@ -159,77 +160,98 @@
         v-bind:class="{ active: currentSinglebox === 'selection' }"
       >
         <div class="row">
-          <div class="links">
-            <div class="social">
-              <a
-                class="icon"
-                v-if="selection.linkedin"
-                :href="'//' + selection.linkedin"
-                target="_blank"
-              >
-                <div class="icon rounded linkedin-icon"></div>
-              </a>
+          <div class="col" v-if="selection.figure1">
+            <div
+              class="figure1"
+              v-bind:style="{
+                'background-image': 'url(' + selection.figure1.link + ')',
+              }"
+            ></div>
+          </div>
+          <div class="col">
+            <div v-if="selection.figure1">
+              <div class="figure-description">
+                {{ selection.figure1.description }}
+              </div>
             </div>
-            <div class="website">
-              <a :href="selection.websiteURL" target="_blank">{{
-                selection.website
-              }}</a>
-            </div>
+            <div
+              v-if="selection.figure2"
+              class="figure2"
+              v-bind:style="{
+                'background-image': 'url(' + selection.figure2.link + ')',
+              }"
+            ></div>
           </div>
           <div
-            class="figure1"
-            v-bind:style="{
-              'background-image': 'url(' + selection.figure1 + ')',
-            }"
-          ></div>
-          <div
-            class="figure2"
-            v-bind:style="{
-              'background-image': 'url(' + selection.figure2 + ')',
-            }"
-          ></div>
-          <div
-            class="logo"
-            v-bind:style="{ 'background-image': 'url(' + selection.logo + ')' }"
-          ></div>
+            class="col figure2-description figure-description"
+            v-if="selection.figure2"
+          >
+            <div>{{ selection.figure2.description }}</div>
+          </div>
         </div>
         <div class="selection-title">{{ selection.name }}</div>
-        <div class="selection-subtitle">UNTERNEHMEN</div>
+        <div class="selection-subtitle">{{ $t("company") }}</div>
         <div class="description">{{ selection.description }}</div>
-         <div class="selection-subtitle">PRODUKTE UND DIENSTL</div>
-        <div class="description">{{ selection.productServicesEn }}</div>
-        <div v-if="selection.address" class="contact center-area">
-          <div class="center-y button rounded primary-bg">
-            <div class="center-area">
-              <div class="pin-icon icon center-x center-y"></div>
-            </div>
-          </div>
-          <div class="address center-y">{{ selection.address }}</div>
+        <div class="selection-subtitle">{{ $t("products-services") }}</div>
+        <div class="description">{{ selection.productServices }}</div>
+        <div v-if="selection.references" class="selection-subtitle">
+          {{ $t("references") }}
         </div>
-        <div v-if="selection.phone" class="contact center-area">
-          <div class="center-y button rounded primary-bg">
-            <div class="center-area">
-              <div class="phone-icon icon center-x center-y"></div>
-            </div>
-          </div>
-          <div class="phone-number center-y">{{ selection.phone }}</div>
+        <div v-if="selection.references" class="description">
+          {{ selection.references }}
         </div>
-        <div
-          v-if="selection.mail"
-          class="contact center-area"
-          style="padding-bottom: 25px"
-        >
-          <div class="center-y button rounded primary-bg">
-            <div class="center-area">
-              <div class="mail-icon icon center-x center-y"></div>
+
+        <hr />
+
+        <div class="row">
+          <div class="col footer-text bold-text">
+            <div>
+              <div>{{ selection.legalName }}</div>
+              <div>{{ selection.address }}</div>
+              <div>{{ selection.email }}</div>
+              <div>T {{ selection.phone }}</div>
+              <div>
+                <a :href="selection.websiteURL" target="_blank"
+                  >{{ selection.website }}
+                </a>
+              </div>
             </div>
           </div>
-          <div class="mail center-y">
-            <a
-              :href="'mailto:' + selection.mail"
-              style="color: black; text-decoration: none"
-              >{{ selection.mail }}</a
-            >
+          <div class="col footer-text">
+            <div v-if="selection.contactPerson">
+              <div>{{ $t("contact") }}:</div>
+              <div>
+                {{ selection.contactPerson.name
+                }}<span v-if="selection.contactPerson.role"
+                  >, {{ selection.contactPerson.role }}</span
+                >
+              </div>
+              <div>{{ selection.contactPerson.email }}</div>
+            </div>
+            <div v-if="selection.turnover">
+              {{ $t("turnover") + ": " + selection.turnover + " Mio. €" }}
+            </div>
+            <div v-if="selection.employees">
+              {{ $t("employees") + ": " + selection.employees }}
+            </div>
+            <div v-if="selection.exportQuote">
+              {{ $t("export-quote") + ": " + selection.exportQuote + " %" }}
+            </div>
+            <div v-if="selection.rdQuote">
+              {{ $t("rd-quote-quote") + ": " + selection.rdQuote + " %" }}
+            </div>
+            <div v-if="selection.certifications">
+              {{ $t("certifications") + ": " + selection.certifications }}
+            </div>
+          </div>
+          <div class="col">
+            <div
+              v-if="selection.logo"
+              class="company-logo logo"
+              v-bind:style="{
+                'background-image': 'url(' + selection.logo + ')',
+              }"
+            ></div>
           </div>
         </div>
       </div>
@@ -302,7 +324,7 @@ export default {
     messages: {
       en: {
         industry: "Industry",
-        industries: "Industries",
+        industries: "Automotive | Automoation organizations South Tyrol",
         type: "Type",
         filter: "Filter",
         "search-placeholder": "Freelancers, Companies, ...",
@@ -319,13 +341,21 @@ export default {
         "visual-arts": "Visual Arts",
         "software-and-games": "Software & Games",
         freelancer: "Freelancer",
-        company: "Company",
+        company: "COMPANY",
         association: "Association",
         entity: "Public entity",
+        "products-services": "PRODUCTS AND SERVICES",
+        references: "REFERENCES",
+        employees: "Employees",
+        turnover: "Turnover",
+        "export-quote": "Export-quote",
+        "rd-quote-quote": "Research & Development quote",
+        certifications: "Certifications",
+        contact: "Contact",
       },
       de: {
         industry: "Industrie",
-        industries: "Industrien",
+        industries: "Automotive | Automoation Branchenüberblick Südtirol",
         type: "Typ",
         filter: "Filter",
         "search-placeholder": "Freelancers, Firmen, ...",
@@ -342,13 +372,21 @@ export default {
         "visual-arts": "Bildende Kunst",
         "software-and-games": "Software & Games",
         freelancer: "Freelancer",
-        company: "Firma",
+        company: "Unternehmen",
         association: "Verband",
         entity: "Öffentliche Einrichtung",
+        "products-services": "PRODUKTE UND DIENSTLEISTUNGEN",
+        references: "REFERENZEN",
+        employees: "Mitarbeiter",
+        turnover: "Umsatz",
+        "export-quote": "Exportquote",
+        "rd-quote-quote": "Forschung & Entwicklungs-Quote",
+        certifications: "Zertifizierungen",
+        contact: "Kontakt",
       },
       it: {
         industry: "Industria",
-        industries: "Industrie",
+        industries: "Automotive | Automoation Panoramica del settore",
         type: "Tipo",
         filter: "Filtra",
         "search-placeholder": "Freelancer, Aziende, ...",
@@ -365,9 +403,17 @@ export default {
         "visual-arts": "Arti visive",
         "software-and-games": "Software & Games",
         freelancer: "Freelancer",
-        company: "Azienda",
+        company: "AZIENDA",
         association: "Associazione",
         entity: "Ente pubblico",
+        "products-services": "PRODOTTI E SERVIZI",
+        references: "REFERENZE",
+        employees: "Collaboratori",
+        turnover: "Fatturato",
+        "export-quote": "Quota di esportazione",
+        "rd-quote-quote": "Percentuale di Ricerca & Sviluppo",
+        certifications: "Certificazioni",
+        contact: "Contatto",
       },
     },
   }),
@@ -701,8 +747,9 @@ export default {
       this.currentSingleboxTitle = this.lastBoxesTitle.pop();
       this.currentSinglebox = this.lastBoxes.pop();
 
-      this.activateAllPoints();
-      this.renderFilters();
+      // to fix "marker disappear on step back" bug
+      // this.activateAllPoints();
+      // this.renderFilters();
     },
 
     companySelected(id) {
@@ -797,6 +844,7 @@ export default {
 
     activateAllPoints() {
       this.companies.forEach((company) => {
+        console.log("set active");
         company.active = true;
       });
     },
@@ -804,9 +852,10 @@ export default {
     showActivePoints() {
       var newMarkers = new L.MarkerClusterGroup();
       // var newMarkers = new L.LayerGroup();
-
+      console.log("show");
       this.companies.forEach((company) => {
         if (company.active) {
+          console.log("active");
           company.leafletObject.addTo(newMarkers);
         }
       });
@@ -919,15 +968,15 @@ export default {
 
     // instead of centering the point, move it sightly to the right on desktop
     myMapFlyTo(coordinates, zoom) {
-      console.log(coordinates);
       if (!this.isMobile())
-        coordinates = [coordinates[0], coordinates[1] - 0.01];
-      console.log(coordinates);
+        coordinates = [coordinates[0], coordinates[1] - 0.008];
       this.map.flyTo(coordinates, zoom);
     },
 
     isMobile() {
-      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
     },
   },
   watch: {
