@@ -247,7 +247,7 @@
           <div class="col">
             <div
               v-if="selection.logo"
-              class="company-logo logo"
+              class="company-logo-footer logo"
               v-bind:style="{
                 'background-image': 'url(' + selection.logo + ')',
               }"

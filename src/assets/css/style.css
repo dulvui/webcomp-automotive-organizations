@@ -468,7 +468,6 @@ a.icon {
   display: grid;
 }
 
-
 .figure1 {
   background-size: contain;
   width: 300px;
@@ -513,7 +512,8 @@ a.icon {
   font-weight: 800;
 }
 
-.company-logo {
+.company-logo-footer {
   width: 200px;
-  height: 100px;
+  height: 150px;
+  align-items: flex-end;
 }
