@@ -52,12 +52,6 @@ function generateCompanies(res, language) {
 function parseCompanyData(index, element) {
   var meta = element.smetadata;
 
-  let imageLogoLink = config.IMAGES_S3_BUCKET_URL;
-  let imageFigure1Link = config.IMAGES_S3_BUCKET_URL;
-  let imageFigure2Link = config.IMAGES_S3_BUCKET_URL;
-
-
-
   var linkedin;
   var website, websiteURL;
 
@@ -69,12 +63,6 @@ function parseCompanyData(index, element) {
     website = url[0];
     websiteURL = url[1];
   }
-
-  // hack to change images suffix to .png
-  imageLogoLink += meta.image_logo.substring(0, meta.image_logo.length - 4) + ".png";
-  imageFigure1Link += meta.image_figure_1.substring(0, meta.image_figure_1.length - 4) + ".png";
-  imageFigure2Link += meta.image_figure_2.substring(0, meta.image_figure_2.length - 4) + ".png";
-
 
   return {
     id: meta.organization__short_name.de,
@@ -91,9 +79,9 @@ function parseCompanyData(index, element) {
     sectorIt: "",
     activity: "",
     coords: [element.scoordinate.y, element.scoordinate.x],
-    logo: imageLogoLink,
+    logo: meta.image_logo.link,
     figure1: {
-      link : imageFigure1Link,
+      link : meta.image_figure_1.link,
       description: {
         en: meta.figure1_description ? meta.figure1_description.en : "",
         de: meta.figure1_description ? meta.figure1_description.de : "",
@@ -101,7 +89,7 @@ function parseCompanyData(index, element) {
       },
     },
     figure2: {
-      link: imageFigure2Link,
+      link: meta.image_figure_2.link,
       description: {
         en: meta.figure2_description ? meta.figure2_description.en : "",
         de: meta.figure2_description ? meta.figure2_description.de : "",
