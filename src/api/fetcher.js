@@ -79,9 +79,9 @@ function parseCompanyData(index, element) {
     sectorIt: "",
     activity: "",
     coords: [element.scoordinate.y, element.scoordinate.x],
-    logo: meta.image_logo.link,
+    logo: meta.file_logo.link,
     figure1: {
-      link : meta.image_figure_1.link,
+      link : meta.file_figure_1.link,
       description: {
         en: meta.figure1_description ? meta.figure1_description.en : "",
         de: meta.figure1_description ? meta.figure1_description.de : "",
@@ -89,7 +89,7 @@ function parseCompanyData(index, element) {
       },
     },
     figure2: {
-      link: meta.image_figure_2.link,
+      link: meta.file_figure_2.link,
       description: {
         en: meta.figure2_description ? meta.figure2_description.en : "",
         de: meta.figure2_description ? meta.figure2_description.de : "",
